@@ -45,5 +45,5 @@ jobs:
 
       - name: Terraform Destroy
         run: |
-          terraform workspace select -or-create=true prod
+          terraform workspace select prod
           terraform destroy --var-file prod.tfvars -auto-approve
