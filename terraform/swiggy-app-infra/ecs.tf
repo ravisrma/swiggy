@@ -63,7 +63,7 @@ module "web_ecs_service" {
   deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
   container_definitions = {
-    web = {
+    swiggy-container = {
       cpu         = "${var.web_service_cpu}"
       memory      = "${var.web_service_memory}"
       image       = module.web_ecr.repository_url
@@ -102,7 +102,7 @@ module "web_ecs_service" {
   load_balancer = {
     service = {
       target_group_arn = aws_lb_target_group.this.arn
-      container_name   = "web"
+      container_name   = "swiggy-container"
       container_port   = "${var.web_service_port}"
     }
   }
