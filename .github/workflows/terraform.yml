@@ -13,7 +13,6 @@ jobs:
     defaults:
       run:
         shell: bash
-        working-directory: .
 
     steps:
       - name: Git checkout
@@ -39,15 +38,20 @@ jobs:
         env:
           AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
           AWS_BUCKET_KEY_NAME: ${{ secrets.AWS_BUCKET_KEY_NAME }}
-        run: terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" -backend-config="key=${AWS_BUCKET_KEY_NAME}" -backend-config="region=${AWS_REGION}"
-
-      - name: Terraform Validate
-        id: validate
-        run: terraform validate -no-color
+        run: |
+          terraform init -backend-config="bucket=${AWS_BUCKET_NAME}" \
+                         -backend-config="key=${AWS_BUCKET_KEY_NAME}" \
+                         -backend-config="region=${AWS_REGION}"
 
       - name: Terraform Plan
         id: plan
-        run: terraform plan -no-color
+        run: |
+          if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+            terraform workspace select -or-create=true prod
+            terraform plan --var-file prod.tfvars
+          else
+            echo "Skipping plan for non-prod environment"
+          fi
         if: github.event_name == 'pull_request'
         continue-on-error: true
 
@@ -87,4 +91,6 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push')
-        run: terraform apply -auto-approve -input=false
+        run: |
+          terraform workspace select -or-create=true prod
+          terraform apply --var-file prod.tfvars -auto-approve
