@@ -49,7 +49,7 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          terraform workspace select -or-create=true prod
+          #terraform workspace select -or-create=true prod
           terraform plan --var-file prod.tfvars -no-color 
         continue-on-error: true
 
@@ -91,5 +91,5 @@ jobs:
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push')
         run: |
-          terraform workspace select -or-create=true prod
+          #terraform workspace select -or-create=true prod
           terraform apply --var-file prod.tfvars -auto-approve -input=false
