@@ -49,7 +49,6 @@ jobs:
         id: plan
         if: github.event_name == 'pull_request'
         run: |
-          #terraform workspace select -or-create=true prod
           terraform plan --var-file prod.tfvars -no-color 
         continue-on-error: true
 
