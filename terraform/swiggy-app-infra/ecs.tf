@@ -1,16 +1,7 @@
-module "s3_env_bucket" {
-  count  = var.create_env_bucket ? 1 : 0
-  source = "terraform-aws-modules/s3-bucket/aws"
-  bucket = "${local.prefix}-envs"
-}
+
 resource "aws_service_discovery_http_namespace" "ecs_service_namespace" {
   name = local.prefix
   tags = local.tags
-}
-
-module "s3_web_asset_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-  bucket = "${local.prefix}-web-assets"
 }
 
 module "ecs_cluster" {
