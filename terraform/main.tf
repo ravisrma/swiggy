@@ -8,3 +8,12 @@ module "swiggy-app-infra" {
   web_service_port   = var.web_service_port
   acm_certificate_arn   = var.acm_certificate_arn
 }
+
+terraform {
+  backend "s3" {
+    bucket  = "ecs-terraform-bucket0"
+    key     = "terraform.tfstate"
+    region  = "ap-south-1"
+    encrypt = true
+  }
+}
