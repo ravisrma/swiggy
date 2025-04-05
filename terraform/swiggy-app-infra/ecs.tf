@@ -25,7 +25,7 @@ module "ecs_cluster" {
 module "web_ecr" {
   source = "terraform-aws-modules/ecr/aws"
 
-  repository_name                 = "${local.prefix}-web"
+  repository_name                 = "${local.prefix}-ecr"
   repository_image_tag_mutability = "MUTABLE"
   repository_lifecycle_policy = jsonencode({
     rules = [
@@ -53,7 +53,7 @@ module "web_ecr" {
 module "web_ecs_service" {
   source = "terraform-aws-modules/ecs/aws//modules/service"
 
-  name                   = "${local.prefix}-web"
+  name                   = "${local.prefix}-service"
   cluster_arn            = module.ecs_cluster.cluster_arn
   enable_execute_command = true
 
@@ -63,7 +63,7 @@ module "web_ecs_service" {
   deployment_minimum_healthy_percent = 100
   deployment_maximum_percent         = 200
   container_definitions = {
-    web = {
+    swiggy = {
       cpu         = "${var.web_service_cpu}"
       memory      = "${var.web_service_memory}"
       image       = module.web_ecr.repository_url
@@ -102,7 +102,7 @@ module "web_ecs_service" {
   load_balancer = {
     service = {
       target_group_arn = aws_lb_target_group.this.arn
-      container_name   = "web"
+      container_name   = "swiggy"
       container_port   = "${var.web_service_port}"
     }
   }
