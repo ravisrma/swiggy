@@ -53,13 +53,6 @@ variable "project_name" {
 }
 
 
-
-variable "create_env_bucket" {
-  description = "Whether to create an environment bucket"
-  type        = bool
-  default     = false
-}
-
 variable "web_service_environment" {
   description = "Environment variables for the web service"
   type        = list(map(string))

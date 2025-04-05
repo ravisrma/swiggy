@@ -53,11 +53,6 @@ variable "project_name" {
 }
 
 
-variable "create_env_bucket" {
-  description = "Whether to create an environment bucket"
-  type        = bool
-  default     = false
-}
 
 
 
